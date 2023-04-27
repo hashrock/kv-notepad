@@ -18,9 +18,6 @@ export const handler: Handlers<undefined, State> = {
       return new Response("Bad Request", { status: 400 });
     }
 
-    console.log("title:", title);
-    console.log("body:", body);
-
     await addMemo(u.id, title, body);
 
     //    return new Response("OK", { status: 200 });
