@@ -40,7 +40,7 @@ export default function Home(props: PageProps<Data>) {
   return (
     <>
       <Head>
-        <title>Tic-Tac-Toe</title>
+        <title>KV Memo</title>
       </Head>
       <div class="px-4 py-8 mx-auto max-w-screen-md">
         <Header user={props.data?.user ?? null} />
