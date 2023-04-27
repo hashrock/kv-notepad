@@ -22,7 +22,8 @@ export async function setOauthSession(session: string, value: OauthSession) {
 }
 
 export async function setUserWithSession(user: User, session: string) {
-  await kv.atomic()
+  await kv
+    .atomic()
     .set(["users", user.id], user)
     .set(["users_by_login", user.login], user)
     .set(["users_by_session", session], user)
@@ -49,12 +50,32 @@ export async function deleteSession(session: string) {
   await kv.delete(["users_by_session", session]);
 }
 
+export async function addMemo(uid: string, memo: string) {
+  const user = await getUserById(uid);
+  if (!user) return;
+  const memos = user.memos ?? [];
+  memos.push(memo);
+  await kv
+    .atomic()
+    .set(["users", user.id], { ...user, memos })
+    .commit();
+}
+
+export async function listMemo(uid: string) {
+  const user = await getUserById(uid);
+  if (!user) return [];
+  return user.memos ?? [];
+}
+
 export async function listRecentlySignedInUsers(): Promise<User[]> {
   const users = [];
-  const iter = kv.list<User>({ prefix: ["users_by_last_signin"] }, {
-    limit: 10,
-    reverse: true,
-  });
+  const iter = kv.list<User>(
+    { prefix: ["users_by_last_signin"] },
+    {
+      limit: 10,
+      reverse: true,
+    },
+  );
   for await (const { value } of iter) {
     users.push(value);
   }

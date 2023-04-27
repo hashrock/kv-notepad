@@ -7,6 +7,7 @@ export interface User {
   login: string;
   name: string;
   avatarUrl: string;
+  memos?: string[];
 }
 
 export interface OauthSession {

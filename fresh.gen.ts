@@ -12,7 +12,8 @@ import * as $5 from "./routes/auth/signin.ts";
 import * as $6 from "./routes/auth/signout.ts";
 import * as $7 from "./routes/game/[id].tsx";
 import * as $8 from "./routes/index.tsx";
-import * as $9 from "./routes/start.tsx";
+import * as $9 from "./routes/memo.ts";
+import * as $10 from "./routes/start.tsx";
 import * as $$0 from "./islands/GameDisplay.tsx";
 import * as $$1 from "./islands/GamesList.tsx";
 
@@ -27,7 +28,8 @@ const manifest = {
     "./routes/auth/signout.ts": $6,
     "./routes/game/[id].tsx": $7,
     "./routes/index.tsx": $8,
-    "./routes/start.tsx": $9,
+    "./routes/memo.ts": $9,
+    "./routes/start.tsx": $10,
   },
   islands: {
     "./islands/GameDisplay.tsx": $$0,

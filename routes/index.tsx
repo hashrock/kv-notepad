@@ -54,12 +54,26 @@ function SignedIn(props: SignedInData) {
   const otherUsers = props.users.filter((u) => u.id != props.user.id);
   return (
     <>
-      <GamesList games={props.games} user={props.user} />
+      <h1>Memos</h1>
+      <p class="my-6">
+        {props.user.memos}
+      </p>
+
+      <div>
+        <form action="/memo" method="POST">
+          <input type="text" name="body" class="border py-3 px-4" />
+          <input type="submit" class="mt-4" />
+        </form>
+      </div>
+      {
+        /* <GamesList games={props.games} user={props.user} />
       <p class="my-6">
         Challenge someone to a game of Tic-Tac-Toe! Just enter their GitHub
         username in the box below and click "Start Game".
-      </p>
-      <form action="/start" method="POST">
+      </p> */
+      }
+      {
+        /* <form action="/start" method="POST">
         <input
           type="text"
           name="opponent"
@@ -73,40 +87,43 @@ function SignedIn(props: SignedInData) {
       </form>
       <p class="my-6">
         Or, challenge one of these other users:
-      </p>
-      <ul class="my-6">
+      </p> */
+      }
+      {
+        /* <ul class="my-6">
         {otherUsers.map((u) => <UserListItem key={u.id} user={u} />)}
-      </ul>
+      </ul> */
+      }
     </>
   );
 }
 
-/** A list item to display a user. Includes a button to challenge the user to a
- * game. Displays name, handle, and avatar. */
-function UserListItem(props: { user: User }) {
-  const startPath = `/start?opponent=${props.user.login}`;
-  return (
-    <li class="flex items-center">
-      <img
-        class="w-8 h-8 mr-2 rounded-full"
-        src={props.user.avatarUrl}
-        alt={props.user.login}
-      />
-      <UserNameVertical class="flex-1" user={props.user} />
-      <form action={startPath} method="POST">
-        <ButtonLink
-          type="button"
-          class="my-2"
-          /** @ts-ignore */
-          onclick="event.preventDefault();this.closest('form').submit();"
-          href={startPath}
-        >
-          Start Game
-        </ButtonLink>
-      </form>
-    </li>
-  );
-}
+// /** A list item to display a user. Includes a button to challenge the user to a
+//  * game. Displays name, handle, and avatar. */
+// function UserListItem(props: { user: User }) {
+//   const startPath = `/start?opponent=${props.user.login}`;
+//   return (
+//     <li class="flex items-center">
+//       <img
+//         class="w-8 h-8 mr-2 rounded-full"
+//         src={props.user.avatarUrl}
+//         alt={props.user.login}
+//       />
+//       <UserNameVertical class="flex-1" user={props.user} />
+//       <form action={startPath} method="POST">
+//         <ButtonLink
+//           type="button"
+//           class="my-2"
+//           /** @ts-ignore */
+//           onclick="event.preventDefault();this.closest('form').submit();"
+//           href={startPath}
+//         >
+//           Start Game
+//         </ButtonLink>
+//       </form>
+//     </li>
+//   );
+// }
 
 function SignedOut() {
   return (
