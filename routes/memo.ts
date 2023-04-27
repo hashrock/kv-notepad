@@ -9,12 +9,19 @@ export const handler: Handlers<undefined, State> = {
       return new Response("Unauthorized", { status: 401 });
     }
     const form = await req.formData();
+    const title = form.get("title")?.toString();
+    if (!title) {
+      return new Response("Bad Request", { status: 400 });
+    }
     const body = form.get("body")?.toString();
     if (!body) {
       return new Response("Bad Request", { status: 400 });
     }
 
-    await addMemo(u.id, body);
+    console.log("title:", title);
+    console.log("body:", body);
+
+    await addMemo(u.id, title, body);
 
     //    return new Response("OK", { status: 200 });
     //redirect /

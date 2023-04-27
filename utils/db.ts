@@ -4,7 +4,7 @@
  * synchronization between clients.
  */
 
-import { Game, OauthSession, User } from "./types.ts";
+import { Game, Memo, OauthSession, User } from "./types.ts";
 
 const kv = await Deno.openKv();
 
@@ -50,16 +50,23 @@ export async function deleteSession(session: string) {
   await kv.delete(["users_by_session", session]);
 }
 
-export async function addMemo(uid: string, memo: string) {
+export async function addMemo(uid: string, title: string, body: string) {
   const uuid = Math.random().toString(36).slice(2);
-  await kv.atomic().set(["memos", uid, uuid], { memo }).commit();
+  const memoObj: Memo = {
+    id: uuid,
+    title,
+    body,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+  await kv.atomic().set(["memos", uid, uuid], memoObj).commit();
 }
 
 export async function listMemo(uid: string) {
-  const iter = await kv.list<{ memo: string }>({ prefix: ["memos", uid] });
-  const memos = [];
-  for await (const { value } of iter) {
-    memos.push(value.memo);
+  const iter = await kv.list<Memo>({ prefix: ["memos", uid] });
+  const memos: Memo[] = [];
+  for await (const item of iter) {
+    memos.push(item.value);
   }
   return memos;
 }

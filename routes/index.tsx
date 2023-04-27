@@ -1,7 +1,7 @@
 import { HandlerContext, PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
 
-import { Game, State, User } from "🛠️/types.ts";
+import { Game, Memo, State, User } from "🛠️/types.ts";
 import {
   getUserBySession,
   listGamesByPlayer,
@@ -18,7 +18,7 @@ interface SignedInData {
   user: User;
   users: User[];
   games: Game[];
-  memos: string[];
+  memos: Memo[];
 }
 
 export async function handler(req: Request, ctx: HandlerContext<Data, State>) {
@@ -55,14 +55,22 @@ function SignedIn(props: SignedInData) {
   return (
     <>
       <h1>Memos</h1>
+
       <p class="my-6">
         {props.memos.map((memo) => {
-          return <div>{memo}</div>;
+          return (
+            <div>
+              <h2>{memo?.id}</h2>
+              <h2>{memo?.title}</h2>
+              <p>{memo?.body}</p>
+            </div>
+          );
         })}
       </p>
 
       <div>
         <form action="/memo" method="POST">
+          <input type="text" name="title" class="border py-3 px-4" />
           <input type="text" name="body" class="border py-3 px-4" />
           <input type="submit" class="mt-4" />
         </form>
