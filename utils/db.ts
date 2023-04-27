@@ -9,7 +9,7 @@ import { Game, OauthSession, User } from "./types.ts";
 const kv = await Deno.openKv();
 
 export async function getAndDeleteOauthSession(
-  session: string,
+  session: string
 ): Promise<OauthSession | null> {
   const res = await kv.get<OauthSession>(["oauth_sessions", session]);
   if (res.versionstamp === null) return null;
@@ -51,20 +51,17 @@ export async function deleteSession(session: string) {
 }
 
 export async function addMemo(uid: string, memo: string) {
-  const user = await getUserById(uid);
-  if (!user) return;
-  const memos = user.memos ?? [];
-  memos.push(memo);
-  await kv
-    .atomic()
-    .set(["users", user.id], { ...user, memos })
-    .commit();
+  const uuid = Math.random().toString(36).slice(2);
+  await kv.atomic().set(["memos", uid, uuid], { memo }).commit();
 }
 
 export async function listMemo(uid: string) {
-  const user = await getUserById(uid);
-  if (!user) return [];
-  return user.memos ?? [];
+  const iter = await kv.list<{ memo: string }>({ prefix: ["memos", uid] });
+  const memos = [];
+  for await (const { value } of iter) {
+    memos.push(value.memo);
+  }
+  return memos;
 }
 
 export async function listRecentlySignedInUsers(): Promise<User[]> {
@@ -74,7 +71,7 @@ export async function listRecentlySignedInUsers(): Promise<User[]> {
     {
       limit: 10,
       reverse: true,
-    },
+    }
   );
   for await (const { value } of iter) {
     users.push(value);
@@ -131,7 +128,7 @@ export async function getGameWithVersionstamp(id: string) {
 
 export function subscribeGame(
   id: string,
-  cb: (game: Game) => void,
+  cb: (game: Game) => void
 ): () => void {
   const bc = new BroadcastChannel(`game/${id}`);
   let closed = false;
@@ -148,7 +145,7 @@ export function subscribeGame(
       "received game update",
       id,
       ev.data.versionstamp,
-      `(last: ${lastVersionstamp})`,
+      `(last: ${lastVersionstamp})`
     );
     if (lastVersionstamp >= ev.data.versionstamp) return;
     cb(ev.data.game);
@@ -161,7 +158,7 @@ export function subscribeGame(
 
 export function subscribeGamesByPlayer(
   userId: string,
-  cb: (list: Game[]) => void,
+  cb: (list: Game[]) => void
 ) {
   const bc = new BroadcastChannel(`games_by_user/${userId}`);
   let closed = false;
@@ -175,7 +172,7 @@ export function subscribeGamesByPlayer(
         "received games_by_user update",
         game.id,
         versionstamp,
-        `(last: ${lastVersionstamps.get(game.id)})`,
+        `(last: ${lastVersionstamps.get(game.id)})`
       );
       if ((lastVersionstamps.get(game.id) ?? "") >= versionstamp) return;
       lastVersionstamps.set(game.id, versionstamp);
