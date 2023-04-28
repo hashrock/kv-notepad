@@ -35,13 +35,6 @@ export default function Home(props: PageProps<Data>) {
     <>
       <Head>
         <title>KV Memo</title>
-        <style>
-          {`
-            body {
-              background-color: #f7fafc;
-            }
-          `}
-        </style>
       </Head>
       <body class="bg-gray-100">
         <div class="px-4 py-8 mx-auto max-w-screen-md">
