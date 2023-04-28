@@ -80,62 +80,56 @@ export default function Home(props: PageProps<Data>) {
         <title>
           {memo.title} | KvMemo
         </title>
-        <style>
-          {`
-            body {
-              background-color: #f7fafc;
-            }
-          `}
-        </style>
       </Head>
-      <div class="px-4 py-8 mx-auto max-w-screen-md h-full">
-        <Header user={user} />
+      <body class="bg-gray-100">
+        <div class="px-4 py-8 mx-auto max-w-screen-md">
+          <Header user={user} />
 
-        <form
-          class="mt-16 flex flex-col"
-          action={`/memo/${memo.id}`}
-          method="POST"
-        >
-          <div>
+          <form
+            class="mt-16 flex flex-col"
+            action={`/memo/${memo.id}`}
+            method="POST"
+          >
+            <div>
+              <input
+                class="w-full  px-3 py-2  border-1 rounded"
+                type="text"
+                name="title"
+                value={memo.title}
+              />
+            </div>
+            <div>
+              <textarea
+                name="body"
+                class="px-3 py-2 h-[32rem] w-full border-1 rounded"
+              >
+                {memo.body}
+              </textarea>
+            </div>
+            <input type="hidden" name="_method" value="PUT" />
+            <input type="hidden" value={memo.id} />
             <input
-              class="w-full  px-3 py-2  border-1 rounded"
-              type="text"
-              name="title"
-              value={memo.title}
+              type="submit"
+              value="Update"
+              class="mt-1 inline-block cursor-pointer px-3 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
             />
-          </div>
-          <div>
-            <textarea
-              name="body"
-              id=""
-              class="px-3 py-2 h-[32rem] w-full border-1 rounded"
-            >
-              {memo.body}
-            </textarea>
-          </div>
-          <input type="hidden" name="_method" value="PUT" />
-          <input type="hidden" value={memo.id} />
-          <input
-            type="submit"
-            value="Update"
-            class="mt-1 inline-block cursor-pointer px-3 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
-          />
-        </form>
+          </form>
 
-        <form
-          action={`/memo/${memo.id}`}
-          method="POST"
-          class="flex justify-center"
-        >
-          <input type="hidden" name="_method" value="DELETE" />
-          <input type="hidden" value={memo.id} />
-          <input
-            class="inline-block mt-8 cursor-pointer px-3 py-2 border-red-800 text-red-800 bg-transparent rounded"
-            type="submit"
-            value="Delete This Note"
-          />
-        </form>
-      </div>
+          <form
+            action={`/memo/${memo.id}`}
+            method="POST"
+            class="flex justify-center"
+          >
+            <input type="hidden" name="_method" value="DELETE" />
+            <input type="hidden" value={memo.id} />
+            <input
+              class="inline-block mt-8 cursor-pointer px-3 py-2 border-red-800 text-red-800 bg-transparent rounded"
+              type="submit"
+              value="Delete This Note"
+            />
+          </form>
+        </div>
+      </body>
     </>
   );
 }

@@ -27,19 +27,33 @@ export default function Home(props: PageProps<Data>) {
           New | KvMemo
         </title>
       </Head>
-      <div class="px-4 py-8 mx-auto max-w-screen-md">
-        <Header user={user} />
+      <body class="bg-gray-100">
+        <div class="px-4 py-8 mx-auto max-w-screen-md">
+          <Header user={user} />
 
-        <form action={`/memo`} method="POST">
-          <div>
-            <input type="text" name="title" value={yyyymmdd} />
-          </div>
-          <div>
-            <textarea name="body" id="" cols={50} rows={20}></textarea>
-          </div>
-          <input type="submit" />
-        </form>
-      </div>
+          <form action={`/memo`} method="POST" class="mt-16 flex flex-col">
+            <div>
+              <input
+                class="w-full  px-3 py-2  border-1 rounded"
+                type="text"
+                name="title"
+                value={yyyymmdd}
+              />
+            </div>
+            <div>
+              <textarea
+                name="body"
+                class="px-3 py-2 h-[32rem] w-full border-1 rounded"
+              />
+            </div>
+            <input
+              type="submit"
+              value="Create"
+              class="mt-1 inline-block cursor-pointer px-3 py-2 bg-gray-800 text-white rounded hover:bg-gray-700"
+            />
+          </form>
+        </div>
+      </body>
     </>
   );
 }

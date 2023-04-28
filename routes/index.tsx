@@ -43,10 +43,12 @@ export default function Home(props: PageProps<Data>) {
           `}
         </style>
       </Head>
-      <div class="px-4 py-8 mx-auto max-w-screen-md">
-        <Header user={props.data?.user ?? null} />
-        {props.data ? <SignedIn {...props.data} /> : <SignedOut />}
-      </div>
+      <body class="bg-gray-100">
+        <div class="px-4 py-8 mx-auto max-w-screen-md">
+          <Header user={props.data?.user ?? null} />
+          {props.data ? <SignedIn {...props.data} /> : <SignedOut />}
+        </div>
+      </body>
     </>
   );
 }
