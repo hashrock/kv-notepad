@@ -7,7 +7,9 @@ export function Header(props: { user: User | null }) {
   return (
     <>
       <div class="flex justify-between items-center">
-        <h1 class="text-4xl font-bold">KV Memo</h1>
+        <a href="/">
+          <h1 class="text-4xl font-bold">KV Memo</h1>
+        </a>
         <a
           href="https://github.com/denoland/tic-tac-toe"
           class={`${linkClass} text-right`}

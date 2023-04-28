@@ -6,6 +6,7 @@ import { getUserBySession, listMemo, listRecentlySignedInUsers } from "🛠️/d
 
 import { Button, ButtonLink } from "🧱/Button.tsx";
 import { Header } from "🧱/Header.tsx";
+import { JSX } from "preact";
 
 type Data = SignedInData | null;
 
@@ -34,6 +35,13 @@ export default function Home(props: PageProps<Data>) {
     <>
       <Head>
         <title>KV Memo</title>
+        <style>
+          {`
+            body {
+              background-color: #f7fafc;
+            }
+          `}
+        </style>
       </Head>
       <div class="px-4 py-8 mx-auto max-w-screen-md">
         <Header user={props.data?.user ?? null} />
@@ -43,27 +51,48 @@ export default function Home(props: PageProps<Data>) {
   );
 }
 
+function LinkButton(
+  props: JSX.HTMLAttributes<HTMLAnchorElement>,
+) {
+  return (
+    <a
+      {...props}
+      class={`inline-block cursor-pointer px-3 py-2 bg-gray-800 text-white rounded hover:bg-gray-700 ${
+        props.class ?? ""
+      }`}
+    />
+  );
+}
+
 function SignedIn(props: SignedInData) {
   return (
     <>
-      <h1>Memos</h1>
+      <div class="mt-16">
+        <div>
+          <LinkButton href="/new">
+            Create New
+          </LinkButton>
+        </div>
+        <ul class="space-y-3">
+          {props.memos.map((memo) => {
+            return (
+              <li>
+                <a
+                  class="block bg-white py-6 px-8 shadow rounded hover:shadow-lg transition duration-200"
+                  href={`/memo/${memo?.id}`}
+                >
+                  <h2 class="text-lg">
+                    {memo?.title}
+                  </h2>
 
-      <ul class="my-6">
-        {props.memos.map((memo) => {
-          return (
-            <li>
-              <a href={`/memo/${memo?.id}`}>{memo?.title}</a>
-            </li>
-          );
-        })}
-      </ul>
-
-      <div>
-        <form action="/api/memo" method="POST">
-          <input type="text" name="title" class="border py-3 px-4" />
-          <input type="text" name="body" class="border py-3 px-4" />
-          <input type="submit" class="mt-4" />
-        </form>
+                  <p class="text-sm text-gray-500">
+                    {memo?.body}
+                  </p>
+                </a>
+              </li>
+            );
+          })}
+        </ul>
       </div>
     </>
   );
