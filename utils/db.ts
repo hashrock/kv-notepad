@@ -52,14 +52,14 @@ export async function deleteSession(session: string) {
 
 export async function addMemo(uid: string, title: string, body: string) {
   const uuid = Math.random().toString(36).slice(2);
-  const memoObj: Memo = {
+  const memo: Memo = {
     id: uuid,
     title,
     body,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
-  await kv.atomic().set(["memos", uid, uuid], memoObj).commit();
+  await kv.set(["memos", uid, uuid], memo);
 }
 
 export async function listMemo(uid: string) {
@@ -87,7 +87,7 @@ export async function updateMemo(
   memo.title = title;
   memo.body = body;
   memo.updatedAt = new Date();
-  await kv.atomic().set(["memos", uid, id], memo).commit();
+  await kv.set(["memos", uid, id], memo);
 }
 
 export async function deleteMemo(uid: string, id: string) {
