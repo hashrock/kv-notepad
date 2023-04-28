@@ -26,12 +26,7 @@ async function put(user: User, id: string, form: FormData) {
 
   await updateMemo(user.id, id, title, body);
 
-  const headers = new Headers();
-  headers.set("location", "/");
-  return new Response(null, {
-    status: 303, // See Other
-    headers,
-  });
+  return redirect();
 }
 
 async function remove(
@@ -39,12 +34,7 @@ async function remove(
   id: string,
 ) {
   await deleteMemo(user.id, id);
-  const headers = new Headers();
-  headers.set("location", "/");
-  return new Response(null, {
-    status: 303, // See Other
-    headers,
-  });
+  return redirect();
 }
 
 interface Data {
@@ -86,14 +76,18 @@ export const handler: Handlers<Data, State> = {
 
     await addMemo(user.id, title, body);
 
-    const headers = new Headers();
-    headers.set("location", "/");
-    return new Response(null, {
-      status: 303,
-      headers,
-    });
+    return redirect();
   },
 };
+
+function redirect(location = "/") {
+  const headers = new Headers();
+  headers.set("location", location);
+  return new Response(null, {
+    status: 303,
+    headers,
+  });
+}
 
 export default function Home(props: PageProps<Data>) {
   const { memo, user } = props.data;
