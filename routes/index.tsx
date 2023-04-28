@@ -1,13 +1,8 @@
 import { HandlerContext, PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
 
-import { Game, Memo, State, User } from "🛠️/types.ts";
-import {
-  getUserBySession,
-  listGamesByPlayer,
-  listMemo,
-  listRecentlySignedInUsers,
-} from "🛠️/db.ts";
+import { Memo, State, User } from "🛠️/types.ts";
+import { getUserBySession, listMemo, listRecentlySignedInUsers } from "🛠️/db.ts";
 
 import { Button, ButtonLink } from "🧱/Button.tsx";
 import { Header } from "🧱/Header.tsx";
@@ -17,7 +12,6 @@ type Data = SignedInData | null;
 interface SignedInData {
   user: User;
   users: User[];
-  games: Game[];
   memos: Memo[];
 }
 
@@ -32,9 +26,7 @@ export async function handler(req: Request, ctx: HandlerContext<Data, State>) {
 
   const memos = await listMemo(user.id);
 
-  const games = await listGamesByPlayer(user.id);
-
-  return ctx.render({ user, users, games, memos });
+  return ctx.render({ user, users, memos });
 }
 
 export default function Home(props: PageProps<Data>) {

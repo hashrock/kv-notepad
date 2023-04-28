@@ -22,24 +22,3 @@ export interface OauthSession {
   state: string;
   codeVerifier: string;
 }
-
-export type GameGrid = [
-  string | null,
-  string | null,
-  string | null,
-  string | null,
-  string | null,
-  string | null,
-  string | null,
-  string | null,
-  string | null
-];
-
-export interface Game {
-  id: string;
-  initiator: User;
-  opponent: User;
-  grid: GameGrid;
-  startedAt: Date;
-  lastMoveAt: Date;
-}
