@@ -48,20 +48,18 @@ function SignedIn(props: SignedInData) {
     <>
       <h1>Memos</h1>
 
-      <p class="my-6">
+      <ul class="my-6">
         {props.memos.map((memo) => {
           return (
-            <div>
-              <h2>{memo?.id}</h2>
-              <h2>{memo?.title}</h2>
-              <p>{memo?.body}</p>
-            </div>
+            <li>
+              <a href={`/memo/${memo?.id}`}>{memo?.title}</a>
+            </li>
           );
         })}
-      </p>
+      </ul>
 
       <div>
-        <form action="/memo" method="POST">
+        <form action="/api/memo" method="POST">
           <input type="text" name="title" class="border py-3 px-4" />
           <input type="text" name="body" class="border py-3 px-4" />
           <input type="submit" class="mt-4" />
