@@ -9,7 +9,7 @@ import { Memo, OauthSession, User } from "./types.ts";
 const kv = await Deno.openKv();
 
 export async function getAndDeleteOauthSession(
-  session: string
+  session: string,
 ): Promise<OauthSession | null> {
   const res = await kv.get<OauthSession>(["oauth_sessions", session]);
   if (res.versionstamp === null) return null;
@@ -81,7 +81,7 @@ export async function updateMemo(
   uid: string,
   id: string,
   title: string,
-  body: string
+  body: string,
 ) {
   const memo = await getMemo(uid, id);
   if (!memo) throw new Error("memo not found");
@@ -102,7 +102,7 @@ export async function listRecentlySignedInUsers(): Promise<User[]> {
     {
       limit: 10,
       reverse: true,
-    }
+    },
   );
   for await (const { value } of iter) {
     users.push(value);
