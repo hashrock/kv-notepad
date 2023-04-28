@@ -1,12 +1,5 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
-import { Head } from "$fresh/runtime.ts";
-import {
-  addMemo,
-  deleteMemo,
-  getMemo,
-  getUserBySession,
-  updateMemo,
-} from "🛠️/db.ts";
+import { Handlers } from "$fresh/server.ts";
+import { addMemo, getUserBySession } from "🛠️/db.ts";
 import { Memo, State, User } from "🛠️/types.ts";
 interface Data {
   memo: Memo;

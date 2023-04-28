@@ -67,18 +67,18 @@ function LinkButton(
 function SignedIn(props: SignedInData) {
   return (
     <>
-      <div class="mt-16">
-        <div>
+      <div class="">
+        <div class="mt-16 flex justify-end">
           <LinkButton href="/new">
             Create New
           </LinkButton>
         </div>
-        <ul class="space-y-3">
+        <ul class="space-y-3 mt-8">
           {props.memos.map((memo) => {
             return (
               <li>
                 <a
-                  class="block bg-white py-6 px-8 shadow rounded hover:shadow-lg transition duration-200"
+                  class="block bg-white py-6 px-8 shadow rounded hover:shadow-lg transition duration-200 border-l-8 border-gray-400"
                   href={`/memo/${memo?.id}`}
                 >
                   <h2 class="text-lg">

@@ -65,18 +65,7 @@ export const handler: Handlers<Data, State> = {
       return remove(user, ctx.params.id);
     }
 
-    const title = form.get("title")?.toString();
-    if (!title) {
-      return new Response("Bad Request", { status: 400 });
-    }
-    const body = form.get("body")?.toString();
-    if (!body) {
-      return new Response("Bad Request", { status: 400 });
-    }
-
-    await addMemo(user.id, title, body);
-
-    return redirect();
+    return new Response("Bad Request", { status: 400 });
   },
 };
 
