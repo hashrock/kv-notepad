@@ -66,12 +66,18 @@ export default function Home(props: PageProps<Data>) {
               );
               const url = `data:${type};base64,${base64}`;
               return (
-                <img
-                  class="mt-8"
-                  src={url}
-                  alt={image?.name}
-                  width="200"
-                />
+                <div>
+                  <img
+                    class="mt-8"
+                    src={url}
+                    alt={image?.name}
+                    width="200"
+                  />
+                  <form action={`/image/${image.id}`} method="POST">
+                    <input type="hidden" name="_method" value="DELETE" />
+                    <input type="submit" value="Delete" />
+                  </form>
+                </div>
               );
             })}
           </div>
