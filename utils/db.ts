@@ -4,7 +4,7 @@
  * synchronization between clients.
  */
 
-import { Memo, OauthSession, User } from "./types.ts";
+import { Image, Memo, OauthSession, User } from "./types.ts";
 
 const kv = await Deno.openKv();
 
@@ -48,6 +48,29 @@ export async function getUserByLogin(login: string) {
 
 export async function deleteSession(session: string) {
   await kv.delete(["users_by_session", session]);
+}
+
+export async function addImage(name: string, data: Blob) {
+  const uuid = Math.random().toString(36).slice(2);
+  const body = new Uint8Array(await data.arrayBuffer());
+  const image: Image = {
+    id: uuid,
+    name,
+    data: body,
+    type: data.type,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+  await kv.set(["images", uuid], image);
+}
+
+export async function listImage() {
+  const iter = await kv.list<Image>({ prefix: ["images"] });
+  const images: Image[] = [];
+  for await (const item of iter) {
+    images.push(item.value);
+  }
+  return images;
 }
 
 export async function addMemo(uid: string, title: string, body: string) {
