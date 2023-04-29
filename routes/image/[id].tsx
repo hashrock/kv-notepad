@@ -3,6 +3,7 @@ import { Head } from "$fresh/runtime.ts";
 import {
   deleteImage,
   deleteMemo,
+  getImage,
   getMemo,
   getUserBySession,
   updateMemo,
@@ -17,6 +18,21 @@ async function remove(
 }
 
 export const handler: Handlers<undefined, State> = {
+  async GET(req, ctx) {
+    const user = await getUserBySession(ctx.state.session ?? "");
+    if (user === null) {
+      return new Response("Unauthorized", { status: 401 });
+    }
+    const image = await getImage(ctx.params.id);
+    if (image === null) {
+      return new Response("Not Found", { status: 404 });
+    }
+    return new Response(image.data, {
+      headers: {
+        "content-type": "image/png",
+      },
+    });
+  },
   async POST(req, ctx) {
     const form = await req.formData();
     const method = form.get("_method")?.toString();

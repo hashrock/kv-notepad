@@ -24,18 +24,6 @@ export const handler: Handlers<Data, State> = {
 
     addImage("myimage", file);
 
-    console.log(
-      file.name,
-      file.type,
-      file.size,
-      file.lastModified,
-      file.stream,
-      file.text,
-      file.arrayBuffer,
-      file.slice,
-      file.arrayBuffer,
-    );
-
     return redirect("/image");
   },
 };

@@ -50,7 +50,7 @@ export async function deleteSession(session: string) {
   await kv.delete(["users_by_session", session]);
 }
 
-export async function addImage(name: string, data: Blob) {
+export async function addImage(name: string, data: File) {
   const uuid = Math.random().toString(36).slice(2);
   const body = new Uint8Array(await data.arrayBuffer());
   const image: Image = {

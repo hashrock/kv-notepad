@@ -58,13 +58,7 @@ export default function Home(props: PageProps<Data>) {
 
           <div>
             {props.data?.images.map((image) => {
-              const data = image?.data;
-              const type = image?.type;
-              const blob = new Blob([data], { type });
-              const base64 = btoa(
-                String.fromCharCode(...new Uint8Array(data)),
-              );
-              const url = `data:${type};base64,${base64}`;
+              const url = `/image/${image.id}`;
               return (
                 <div>
                   <img
