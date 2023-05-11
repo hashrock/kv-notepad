@@ -20,6 +20,7 @@ export interface Memo {
 
 export interface Image {
   id: string;
+  uid: string;
   name: string;
   data: Uint8Array;
   type: string;

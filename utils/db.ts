@@ -4,12 +4,13 @@
  * synchronization between clients.
  */
 
+import { useId } from "https://esm.sh/v117/preact@10.11.0/hooks/src/index.js";
 import { Image, Memo, OauthSession, User } from "./types.ts";
 
 const kv = await Deno.openKv();
 
 export async function getAndDeleteOauthSession(
-  session: string
+  session: string,
 ): Promise<OauthSession | null> {
   const res = await kv.get<OauthSession>(["oauth_sessions", session]);
   if (res.versionstamp === null) return null;
@@ -50,18 +51,19 @@ export async function deleteSession(session: string) {
   await kv.delete(["users_by_session", session]);
 }
 
-export async function addImage(name: string, data: File) {
+export async function addImage(uid: string, data: File) {
   const uuid = Math.random().toString(36).slice(2);
   const body = new Uint8Array(await data.arrayBuffer());
   const image: Image = {
     id: uuid,
-    name,
+    uid,
+    name: data.name,
     data: body,
     type: data.type,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
-  await kv.set(["images", uuid], image);
+  await kv.set(["images", uid, uuid], image);
 }
 
 export async function listImage() {
@@ -112,7 +114,7 @@ export async function updateMemo(
   uid: string,
   id: string,
   title: string,
-  body: string
+  body: string,
 ) {
   const memo = await getMemo(uid, id);
   if (!memo) throw new Error("memo not found");
@@ -133,7 +135,7 @@ export async function listRecentlySignedInUsers(): Promise<User[]> {
     {
       limit: 10,
       reverse: true,
-    }
+    },
   );
   for await (const { value } of iter) {
     users.push(value);
