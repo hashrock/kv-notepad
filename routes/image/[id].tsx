@@ -27,7 +27,7 @@ export const handler: Handlers<undefined, State> = {
     if (image === null) {
       return new Response("Not Found", { status: 404 });
     }
-    return new Response(image.data, {
+    return new Response(image.body, {
       headers: {
         "content-type": "image/png",
       },

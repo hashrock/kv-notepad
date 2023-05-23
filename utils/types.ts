@@ -22,7 +22,7 @@ export interface Image {
   id: string;
   uid: string;
   name: string;
-  data: Uint8Array;
+  // data: Uint8Array;
   type: string;
   createdAt: Date;
   updatedAt: Date;

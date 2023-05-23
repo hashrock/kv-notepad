@@ -6,6 +6,7 @@
 
 import { useId } from "https://esm.sh/v117/preact@10.11.0/hooks/src/index.js";
 import { Image, Memo, OauthSession, User } from "./types.ts";
+import * as blob from "https://deno.land/x/kv_toolbox@0.0.2/blob.ts"
 
 const kv = await Deno.openKv();
 
@@ -58,12 +59,12 @@ export async function addImage(uid: string, data: File) {
     id: uuid,
     uid,
     name: data.name,
-    data: body,
     type: data.type,
     createdAt: new Date(),
     updatedAt: new Date(),
   };
-  await kv.set(["images", uid, uuid], image);
+  await blob.set(kv,["images", uid, uuid], body);
+  await kv.set(["images", uid, uuid], image); 
 }
 
 export async function listImage() {
@@ -77,7 +78,8 @@ export async function listImage() {
 
 export async function getImage(id: string) {
   const res = await kv.get<Image>(["images", id]);
-  return res.value;
+  const body = await blob.get(kv,["images", id]);
+  return {meta: res.value, body};
 }
 
 export async function deleteImage(id: string) {
