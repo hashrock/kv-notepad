@@ -1,10 +1,15 @@
 import { HandlerContext, PageProps } from "$fresh/server.ts";
 import { Head } from "$fresh/runtime.ts";
 
-import { Memo, State, User } from "🛠️/types.ts";
-import { getUserBySession, listMemo, listRecentlySignedInUsers } from "🛠️/db.ts";
+import { Image, Memo, State, User } from "🛠️/types.ts";
+import {
+  getUserBySession,
+  listImage,
+  listMemo,
+  listRecentlySignedInUsers,
+} from "🛠️/db.ts";
 
-import { Button, ButtonLink } from "🧱/Button.tsx";
+import { ButtonLink } from "🧱/Button.tsx";
 import { Header } from "🧱/Header.tsx";
 import { JSX } from "preact";
 
@@ -14,6 +19,7 @@ interface SignedInData {
   user: User;
   users: User[];
   memos: Memo[];
+  images: Image[];
 }
 
 export async function handler(req: Request, ctx: HandlerContext<Data, State>) {
@@ -26,8 +32,8 @@ export async function handler(req: Request, ctx: HandlerContext<Data, State>) {
   if (!user) return ctx.render(null);
 
   const memos = await listMemo(user.id);
-
-  return ctx.render({ user, users, memos });
+  const images = await listImage(user.id);
+  return ctx.render({ user, users, memos, images });
 }
 
 export default function Home(props: PageProps<Data>) {
@@ -60,6 +66,9 @@ function LinkButton(
 }
 
 function SignedIn(props: SignedInData) {
+  const user = props.user ?? null;
+  const userId = user?.id ?? null;
+
   return (
     <>
       <div class="">
@@ -88,6 +97,11 @@ function SignedIn(props: SignedInData) {
             );
           })}
         </ul>
+        <div class="mt-8">
+          <a href={`/image/${userId}`} class="text-blue-500 hover:underline">
+            Uploaded Images
+          </a>
+        </div>
       </div>
     </>
   );

@@ -7,7 +7,7 @@ async function remove(
   id: string,
 ) {
   await deleteImage(uid, id);
-  return redirect("/image");
+  return redirect(`/image/${uid}`);
 }
 
 export const handler: Handlers<undefined, State> = {
