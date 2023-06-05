@@ -4,6 +4,7 @@ import { getUserBySession } from "🛠️/db.ts";
 import { State, User } from "🛠️/types.ts";
 
 import { Header } from "🧱/Header.tsx";
+import TextArea from "../islands/TextArea.tsx";
 
 interface Data {
   user: User | null;
@@ -41,10 +42,7 @@ export default function Home(props: PageProps<Data>) {
               />
             </div>
             <div>
-              <textarea
-                name="body"
-                class="px-3 py-2 h-[32rem] w-full border-1 rounded"
-              />
+              <TextArea />
             </div>
             <input
               type="submit"
