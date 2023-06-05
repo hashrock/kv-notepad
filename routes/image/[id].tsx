@@ -1,10 +1,6 @@
 import { Handlers } from "$fresh/server.ts";
-import {
-  deleteImage,
-  getImage,
-  getUserBySession,
-} from "🛠️/db.ts";
-import {  State, User } from "🛠️/types.ts";
+import { deleteImage, getImage, getUserBySession } from "🛠️/db.ts";
+import { State, User } from "🛠️/types.ts";
 
 async function remove(
   id: string,

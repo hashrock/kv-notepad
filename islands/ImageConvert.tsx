@@ -55,7 +55,7 @@ export default function ImageConvert() {
         encodeWebp(buffer, 50, 1000, 1000)
           .then(
             (blob) => {
-              console.log(blob.size)
+              console.log(blob.size);
               const url = URL.createObjectURL(blob);
               const img = document.createElement("img");
               img.src = url;

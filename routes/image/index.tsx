@@ -1,5 +1,5 @@
 import { Handlers } from "$fresh/server.ts";
-import { addImage, addMemo, getUserBySession } from "🛠️/db.ts";
+import { addImage, getUserBySession } from "🛠️/db.ts";
 import { Memo, State, User } from "🛠️/types.ts";
 
 interface Data {
