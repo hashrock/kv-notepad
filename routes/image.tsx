@@ -70,6 +70,7 @@ export default function Home(props: PageProps<Data>) {
                   />
                   <form action={`/image/${image.id}`} method="POST">
                     <input type="hidden" name="_method" value="DELETE" />
+                    <input type="hidden" name="id" value={image.id} />
                     <input type="submit" value="Delete" />
                   </form>
                 </div>

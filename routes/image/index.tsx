@@ -25,7 +25,7 @@ export const handler: Handlers<Data, State> = {
       return new Response("Bad Request", { status: 400 });
     }
 
-    addImage("myimage", file);
+    addImage(user.id, file);
 
     return redirect("/image");
   },
