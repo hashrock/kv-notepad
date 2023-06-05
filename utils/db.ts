@@ -4,12 +4,13 @@
  * synchronization between clients.
  */
 
-import { Memo, OauthSession, User } from "./types.ts";
+import { Image, Memo, OauthSession, User } from "./types.ts";
+import * as blob from "https://deno.land/x/kv_toolbox@0.0.2/blob.ts";
 
 const kv = await Deno.openKv();
 
 export async function getAndDeleteOauthSession(
-  session: string,
+  session: string
 ): Promise<OauthSession | null> {
   const res = await kv.get<OauthSession>(["oauth_sessions", session]);
   if (res.versionstamp === null) return null;
@@ -50,6 +51,55 @@ export async function deleteSession(session: string) {
   await kv.delete(["users_by_session", session]);
 }
 
+export function addImageData(uuid: string, data: ArrayBuffer) {
+  const body = new Uint8Array(data);
+  return blob.set(kv, ["imagedata", uuid], body);
+}
+
+export function removeImageData(uuid: string) {
+  return blob.remove(kv, ["imagedata", uuid]);
+}
+export function getImageData(uuid: string) {
+  return blob.get(kv, ["imagedata", uuid]);
+}
+
+export async function addImage(uid: string, data: File) {
+  const uuid = Math.random().toString(36).slice(2);
+  const image: Image = {
+    id: uuid,
+    uid,
+    name: data.name,
+    type: data.type,
+    createdAt: new Date(),
+    updatedAt: new Date(),
+  };
+  await addImageData(uuid, await data.arrayBuffer());
+  return { result: await kv.set(["images", uid, uuid], image), id: uuid };
+}
+
+export async function listImage(uid: string) {
+  const iter = await kv.list<Image>({ prefix: ["images", uid] });
+  const images: Image[] = [];
+  for await (const item of iter) {
+    images.push(item.value);
+  }
+  return images;
+}
+
+export async function getImage(uid: string, id: string) {
+  const res = await kv.get<Image>(["images", uid, id]);
+  const body = await getImageData(id);
+  return { meta: res.value, body };
+}
+
+export async function deleteImage(uid: string, id: string) {
+  const res = await kv.get<Image>(["images", uid, id]);
+  if (res.value === null) throw new Error("image not found");
+  if (res.value.uid !== uid) throw new Error("owner not matched");
+  await removeImageData(id);
+  await kv.delete(["images", uid, id]);
+}
+
 export async function addMemo(uid: string, title: string, body: string) {
   const uuid = Math.random().toString(36).slice(2);
   const memo: Memo = {
@@ -80,7 +130,7 @@ export async function updateMemo(
   uid: string,
   id: string,
   title: string,
-  body: string,
+  body: string
 ) {
   const memo = await getMemo(uid, id);
   if (!memo) throw new Error("memo not found");
@@ -101,7 +151,7 @@ export async function listRecentlySignedInUsers(): Promise<User[]> {
     {
       limit: 10,
       reverse: true,
-    },
+    }
   );
   for await (const { value } of iter) {
     users.push(value);
