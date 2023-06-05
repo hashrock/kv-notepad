@@ -1,14 +1,10 @@
-import { Handlers, PageProps } from "$fresh/server.ts";
-import { Head } from "$fresh/runtime.ts";
+import { Handlers } from "$fresh/server.ts";
 import {
   deleteImage,
-  deleteMemo,
   getImage,
-  getMemo,
   getUserBySession,
-  updateMemo,
 } from "🛠️/db.ts";
-import { Memo, State, User } from "🛠️/types.ts";
+import {  State, User } from "🛠️/types.ts";
 
 async function remove(
   id: string,
@@ -29,7 +25,7 @@ export const handler: Handlers<undefined, State> = {
     }
     return new Response(image.body, {
       headers: {
-        "content-type": "image/png",
+        "content-type": image.meta?.type ?? "application/octet-stream",
       },
     });
   },

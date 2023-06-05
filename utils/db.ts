@@ -4,7 +4,6 @@
  * synchronization between clients.
  */
 
-import { useId } from "https://esm.sh/v117/preact@10.11.0/hooks/src/index.js";
 import { Image, Memo, OauthSession, User } from "./types.ts";
 import * as blob from "https://deno.land/x/kv_toolbox@0.0.2/blob.ts"
 
@@ -52,9 +51,20 @@ export async function deleteSession(session: string) {
   await kv.delete(["users_by_session", session]);
 }
 
+export function addImageData(uuid: string, data:ArrayBuffer){
+  const body = new Uint8Array(data);
+  return blob.set(kv,["imagedata", uuid], body);
+}
+
+export function removeImageData(uuid: string){
+  return blob.remove(kv,["imagedata", uuid]);
+}
+export function getImageData(uuid: string){
+  return blob.get(kv,["imagedata", uuid]);
+}
+
 export async function addImage(uid: string, data: File) {
   const uuid = Math.random().toString(36).slice(2);
-  const body = new Uint8Array(await data.arrayBuffer());
   const image: Image = {
     id: uuid,
     uid,
@@ -63,7 +73,7 @@ export async function addImage(uid: string, data: File) {
     createdAt: new Date(),
     updatedAt: new Date(),
   };
-  await blob.set(kv,["images", uid, uuid], body);
+  await addImageData(uuid, await data.arrayBuffer());
   await kv.set(["images", uid, uuid], image); 
 }
 
@@ -78,11 +88,12 @@ export async function listImage() {
 
 export async function getImage(id: string) {
   const res = await kv.get<Image>(["images", id]);
-  const body = await blob.get(kv,["images", id]);
+  const body = await getImageData(id);
   return {meta: res.value, body};
 }
 
 export async function deleteImage(id: string) {
+  await removeImageData(id);
   await kv.delete(["images", id]);
 }
 
