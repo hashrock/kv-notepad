@@ -10,7 +10,7 @@ import * as blob from "https://deno.land/x/kv_toolbox@0.0.2/blob.ts";
 const kv = await Deno.openKv();
 
 export async function getAndDeleteOauthSession(
-  session: string,
+  session: string
 ): Promise<OauthSession | null> {
   const res = await kv.get<OauthSession>(["oauth_sessions", session]);
   if (res.versionstamp === null) return null;
@@ -74,11 +74,11 @@ export async function addImage(uid: string, data: File) {
     updatedAt: new Date(),
   };
   await addImageData(uuid, await data.arrayBuffer());
-  return await kv.set(["images", uuid], image);
+  return await kv.set(["images", uid, uuid], image);
 }
 
-export async function listImage() {
-  const iter = await kv.list<Image>({ prefix: ["images"] });
+export async function listImage(uid: string) {
+  const iter = await kv.list<Image>({ prefix: ["images", uid] });
   const images: Image[] = [];
   for await (const item of iter) {
     images.push(item.value);
@@ -86,15 +86,18 @@ export async function listImage() {
   return images;
 }
 
-export async function getImage(id: string) {
-  const res = await kv.get<Image>(["images", id]);
+export async function getImage(uid: string, id: string) {
+  const res = await kv.get<Image>(["images", uid, id]);
   const body = await getImageData(id);
   return { meta: res.value, body };
 }
 
-export async function deleteImage(id: string) {
+export async function deleteImage(uid: string, id: string) {
+  const res = await kv.get<Image>(["images", uid, id]);
+  if (res.value === null) throw new Error("image not found");
+  if (res.value.uid !== uid) throw new Error("owner not matched");
   await removeImageData(id);
-  await kv.delete(["images", id]);
+  await kv.delete(["images", uid, id]);
 }
 
 export async function addMemo(uid: string, title: string, body: string) {
@@ -127,7 +130,7 @@ export async function updateMemo(
   uid: string,
   id: string,
   title: string,
-  body: string,
+  body: string
 ) {
   const memo = await getMemo(uid, id);
   if (!memo) throw new Error("memo not found");
@@ -148,7 +151,7 @@ export async function listRecentlySignedInUsers(): Promise<User[]> {
     {
       limit: 10,
       reverse: true,
-    },
+    }
   );
   for await (const { value } of iter) {
     users.push(value);

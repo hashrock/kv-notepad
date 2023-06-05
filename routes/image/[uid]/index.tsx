@@ -13,6 +13,10 @@ export const handler: Handlers<Data, State> = {
     if (user === null) {
       return new Response("Unauthorized", { status: 401 });
     }
+    if (user.id !== ctx.params.uid) {
+      return new Response("Forbidden", { status: 403 });
+    }
+
     const file = form.get("image") as File | null;
 
     if (!file) {

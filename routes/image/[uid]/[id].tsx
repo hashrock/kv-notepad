@@ -3,19 +3,17 @@ import { deleteImage, getImage, getUserBySession } from "🛠️/db.ts";
 import { State, User } from "🛠️/types.ts";
 
 async function remove(
+  uid: string,
   id: string,
 ) {
-  await deleteImage(id);
+  await deleteImage(uid, id);
   return redirect("/image");
 }
 
 export const handler: Handlers<undefined, State> = {
   async GET(req, ctx) {
-    const user = await getUserBySession(ctx.state.session ?? "");
-    if (user === null) {
-      return new Response("Unauthorized", { status: 401 });
-    }
-    const image = await getImage(ctx.params.id);
+    // No auth
+    const image = await getImage(ctx.params.uid, ctx.params.id);
     if (image === null) {
       return new Response("Not Found", { status: 404 });
     }
@@ -32,8 +30,11 @@ export const handler: Handlers<undefined, State> = {
     if (user === null) {
       return new Response("Unauthorized", { status: 401 });
     }
+    if (user.id !== ctx.params.uid) {
+      return new Response("Forbidden", { status: 403 });
+    }
     if (method === "DELETE") {
-      return remove(ctx.params.id);
+      return remove(ctx.params.uid, ctx.params.id);
     }
 
     return new Response("Bad Request", { status: 400 });

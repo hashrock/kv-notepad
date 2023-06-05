@@ -32,12 +32,15 @@ export async function handler(req: Request, ctx: HandlerContext<Data, State>) {
   if (!user) return ctx.render(null);
 
   const memos = await listMemo(user.id);
-  const images = await listImage();
+  const images = await listImage(user.id);
 
   return ctx.render({ user, users, memos, images });
 }
 
 export default function Home(props: PageProps<Data>) {
+  const user = props.data?.user ?? null;
+  const userId = user?.id ?? null;
+
   return (
     <>
       <Head>
@@ -45,10 +48,14 @@ export default function Home(props: PageProps<Data>) {
       </Head>
       <body class="bg-gray-100">
         <div class="px-4 py-8 mx-auto max-w-screen-md">
-          <Header user={props.data?.user ?? null} />
+          <Header user={user} />
 
           <div>
-            <form action="/image" method="POST" encType="multipart/form-data">
+            <form
+              action={`/image/${userId}`}
+              method="POST"
+              encType="multipart/form-data"
+            >
               <input type="file" name="image" />
               <input
                 type="submit"
@@ -59,7 +66,7 @@ export default function Home(props: PageProps<Data>) {
 
           <div>
             {props.data?.images.map((image) => {
-              const url = `/image/${image.id}`;
+              const url = `/image/${image.uid}/${image.id}`;
               return (
                 <div>
                   <img
@@ -68,7 +75,10 @@ export default function Home(props: PageProps<Data>) {
                     alt={image?.name}
                     width="200"
                   />
-                  <form action={`/image/${image.id}`} method="POST">
+                  <form
+                    action={`/image/${image.uid}/${image.id}`}
+                    method="POST"
+                  >
                     <input type="hidden" name="_method" value="DELETE" />
                     <input type="hidden" name="id" value={image.id} />
                     <input type="submit" value="Delete" />
