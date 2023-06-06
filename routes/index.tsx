@@ -12,6 +12,7 @@ import {
 import { ButtonLink } from "🧱/Button.tsx";
 import { Header } from "🧱/Header.tsx";
 import { JSX } from "preact";
+import render from "../utils/markdown.ts";
 
 type Data = SignedInData | null;
 
@@ -89,8 +90,10 @@ function SignedIn(props: SignedInData) {
                     {memo?.title}
                   </h2>
 
-                  <p class="text-sm text-gray-500">
-                    {memo?.body}
+                  <p
+                    class="text-sm text-gray-500"
+                    dangerouslySetInnerHTML={{ __html: render(memo?.body) }}
+                  >
                   </p>
                 </a>
               </li>
