@@ -1,6 +1,6 @@
 import { MiddlewareHandlerContext } from "$fresh/server.ts";
-import { getCookies } from "$std/http/cookie.ts";
 import { State } from "🛠️/types.ts";
+import { getSessionId } from "kv_oauth";
 
 export async function handler(
   req: Request,
@@ -8,8 +8,7 @@ export async function handler(
 ) {
   const url = new URL(req.url);
   if (url.pathname === "") return await ctx.next();
-  const cookies = getCookies(req.headers);
-  ctx.state.session = cookies.session;
+  ctx.state.session = getSessionId(req);
   const resp = await ctx.next();
   return resp;
 }

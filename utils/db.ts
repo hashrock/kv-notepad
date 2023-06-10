@@ -4,23 +4,10 @@
  * synchronization between clients.
  */
 
-import { Image, Memo, OauthSession, User } from "./types.ts";
+import { Image, Memo, User } from "./types.ts";
 import * as blob from "https://deno.land/x/kv_toolbox@0.0.2/blob.ts";
 
 const kv = await Deno.openKv();
-
-export async function getAndDeleteOauthSession(
-  session: string
-): Promise<OauthSession | null> {
-  const res = await kv.get<OauthSession>(["oauth_sessions", session]);
-  if (res.versionstamp === null) return null;
-  await kv.delete(["oauth_sessions", session]);
-  return res.value;
-}
-
-export async function setOauthSession(session: string, value: OauthSession) {
-  await kv.set(["oauth_sessions", session], value);
-}
 
 export async function setUserWithSession(user: User, session: string) {
   await kv
@@ -130,7 +117,7 @@ export async function updateMemo(
   uid: string,
   id: string,
   title: string,
-  body: string
+  body: string,
 ) {
   const memo = await getMemo(uid, id);
   if (!memo) throw new Error("memo not found");
@@ -151,7 +138,7 @@ export async function listRecentlySignedInUsers(): Promise<User[]> {
     {
       limit: 10,
       reverse: true,
-    }
+    },
   );
   for await (const { value } of iter) {
     users.push(value);
