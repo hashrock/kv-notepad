@@ -25,7 +25,7 @@ export function Header(props: { user: User | null }) {
               <p class="text-sm text-gray-600">
                 Logged in as <UserNameHorizontal user={props.user} />
               </p>
-              <a class={linkClass} href="/auth/signout">
+              <a class={linkClass} href="/signout">
                 Log out
               </a>
             </>
@@ -35,7 +35,7 @@ export function Header(props: { user: User | null }) {
               <p class="text-sm text-gray-600">
                 Anonymous user
               </p>
-              <a class={linkClass} href="/auth/signin">
+              <a class={linkClass} href="/signin">
                 Log in
               </a>
             </>

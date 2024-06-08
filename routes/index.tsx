@@ -114,7 +114,7 @@ function SignedOut() {
   return (
     <>
       <p class="my-6">
-        <ButtonLink href="/auth/signin">
+        <ButtonLink href="/signin">
           Log in with GitHub
         </ButtonLink>
       </p>

@@ -6,9 +6,6 @@ import * as $_app from "./routes/_app.tsx";
 import * as $_middleware from "./routes/_middleware.tsx";
 import * as $api_image_uid_id_ from "./routes/api/image/[uid]/[id].tsx";
 import * as $api_image_index from "./routes/api/image/index.tsx";
-import * as $auth_oauth2callback from "./routes/auth/oauth2callback.ts";
-import * as $auth_signin from "./routes/auth/signin.ts";
-import * as $auth_signout from "./routes/auth/signout.ts";
 import * as $image_uid_id_ from "./routes/image/[uid]/[id].tsx";
 import * as $image_uid_index from "./routes/image/[uid]/index.tsx";
 import * as $index from "./routes/index.tsx";
@@ -25,9 +22,6 @@ const manifest = {
     "./routes/_middleware.tsx": $_middleware,
     "./routes/api/image/[uid]/[id].tsx": $api_image_uid_id_,
     "./routes/api/image/index.tsx": $api_image_index,
-    "./routes/auth/oauth2callback.ts": $auth_oauth2callback,
-    "./routes/auth/signin.ts": $auth_signin,
-    "./routes/auth/signout.ts": $auth_signout,
     "./routes/image/[uid]/[id].tsx": $image_uid_id_,
     "./routes/image/[uid]/index.tsx": $image_uid_index,
     "./routes/index.tsx": $index,
